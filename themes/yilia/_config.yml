@@ -40,7 +40,7 @@ open_in_new: true
 
 # Miscellaneous
 google_analytics: ''
-favicon: /favicon.png
+favicon: /icon.png
 
 #你的头像url
 avatar: /author.png
