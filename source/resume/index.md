@@ -1,3 +1,4 @@
+---
 # Frank的简历
 ---
 # 联系方式
@@ -15,7 +16,7 @@
  - 个人博客：https://wanghuu.github.io/
  - Github：https://github.com/wanghuu
  - 期望职位：Java软件工程师
- - 期望薪资：税前月薪10k~13k，特别喜欢的公司可例外
+ - 期望薪资：税前月薪8k~11k，特别喜欢的公司可例外
  - 期望城市：杭州
 
 ---
@@ -24,6 +25,18 @@
 有扎实的编程功底，代码**书写规范**，自学能力强。
 抗压能力强，能够适应工作上的难题和挑战，有钻研问题的执念。
 喜欢有效率的沟通和工作。
+
+---
+# 技能清单
+
+以下均为我熟练使用的技能
+
+- Web开发：jsp/servlet/tomcat
+- Web框架：struts2/springMVC
+- 前端技术：Ajax/jQuery
+- 数据库相关：MySQL/SQL Server/Redis/MyBatis/Hibernate
+- 版本管理、文档和自动化部署工具：Svn/Git/Maven
+- 其它：Linux/nginx/
 
 ---
 
@@ -52,18 +65,7 @@
 在此项目中，我主要负责农民合作社模块，实现了包括登录注册，信息上报，报表导入导出，信息图表统计等功能。
 
 ---
-# 技能清单
 
-以下均为我熟练使用的技能
-
-- Web开发：jsp/servlet/tomcat
-- Web框架：struts2/springMVC
-- 前端技术：Ajax/jQuery
-- 数据库相关：MySQL/SQL Server/Redis/MyBatis/Hibernate
-- 版本管理、文档和自动化部署工具：Svn/Git/Maven
-- 其它：Linux/nginx/
-
----
 
 # 致谢
 感谢您花时间阅读我的简历，期待能有机会和您共事。
