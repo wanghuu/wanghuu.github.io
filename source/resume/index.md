@@ -35,7 +35,7 @@
 - 熟悉Ajax/jQuery等前端技术
 - 熟练使用MySQL进行项目开发，使用Redis进行数据缓存，熟练使用MyBatis 框架进行持久层开发，了解并使用过Hibernate进行开发。
 - 熟练使用Svn/Git进行项目版本控制，现已完全使用git进行协作开发
-- 熟悉Linux常用命令，熟悉常用软件的安装和服务的部署, 如redis，nginx,fastdfs等。
+- 熟练使用Linux常用命令，熟悉常用软件的安装和服务的部署, 如redis，nginx,fastdfs等。
 
 ---
 
