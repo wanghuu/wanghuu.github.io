@@ -16,8 +16,6 @@
  - 个人博客：https://wanghuu.github.io/
  - Github：https://github.com/wanghuu
  - 期望职位：Java软件工程师
- - 期望薪资：12k
- - 期望城市：杭州
 
 ---
 
