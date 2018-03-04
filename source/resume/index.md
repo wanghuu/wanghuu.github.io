@@ -11,7 +11,7 @@
 # 个人信息
 
  - 王虎/男/1994 
- - 本科/物联网工程
+ - 本科/计算机科学与技术
  - 工作年限：2年
  - 个人博客：https://wanghuu.github.io/
  - Github：https://github.com/wanghuu
