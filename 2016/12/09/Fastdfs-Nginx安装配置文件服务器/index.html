@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Fastdfs+Nginx安装配置文件服务器 | Frank的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在开发一个电商项目，需要用到图片上传功能。传统得做法是将图片存储在本地路径，但对于大型的网站来说，一般都会有单独存储图片的服务器，通过查阅相关资料，折腾了几天，我选择使用了Fastdfs+Nginx的方式来配置了一台文件存储服务器。 Fastdfs是什么 FastDFS是一个开源的轻量级分布式文件系统，它对文件进行管理，功能包括：文件存储、文件同步、文件访问（文件上传、文件下载）等，解决了大容">
+<meta name="keywords" content="linux,Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fastdfs+Nginx安装配置文件服务器">
+<meta property="og:url" content="https://wanghuu.github.io/2016/12/09/Fastdfs-Nginx安装配置文件服务器/index.html">
+<meta property="og:site_name" content="Frank的博客">
+<meta property="og:description" content="最近在开发一个电商项目，需要用到图片上传功能。传统得做法是将图片存储在本地路径，但对于大型的网站来说，一般都会有单独存储图片的服务器，通过查阅相关资料，折腾了几天，我选择使用了Fastdfs+Nginx的方式来配置了一台文件存储服务器。 Fastdfs是什么 FastDFS是一个开源的轻量级分布式文件系统，它对文件进行管理，功能包括：文件存储、文件同步、文件访问（文件上传、文件下载）等，解决了大容">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://wanghuu.github.io/img/fastdfs/install_package.jpg">
+<meta property="og:image" content="https://wanghuu.github.io/img/fastdfs/nginx_success.jpg">
+<meta property="og:updated_time" content="2018-11-24T12:49:58.342Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fastdfs+Nginx安装配置文件服务器">
+<meta name="twitter:description" content="最近在开发一个电商项目，需要用到图片上传功能。传统得做法是将图片存储在本地路径，但对于大型的网站来说，一般都会有单独存储图片的服务器，通过查阅相关资料，折腾了几天，我选择使用了Fastdfs+Nginx的方式来配置了一台文件存储服务器。 Fastdfs是什么 FastDFS是一个开源的轻量级分布式文件系统，它对文件进行管理，功能包括：文件存储、文件同步、文件访问（文件上传、文件下载）等，解决了大容">
+<meta name="twitter:image" content="https://wanghuu.github.io/img/fastdfs/install_package.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Frank的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/icon.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+</html>
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/author.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frank Wang</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/archives/">所有文章</a></li>
+	        
+				<li><a href="/tags/读书/">读书</a></li>
+	        
+				<li><a href="/resume">简历</a></li>
+	        
+				<li><a href="/about/">关于我</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/wanghuu" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/u/2480012737/home" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">Frank Wang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/author.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frank Wang</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">所有文章</a></li>
+		        
+					<li><a href="/tags/读书/">读书</a></li>
+		        
+					<li><a href="/resume">简历</a></li>
+		        
+					<li><a href="/about/">关于我</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wanghuu" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2480012737/home" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-Fastdfs-Nginx安装配置文件服务器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Fastdfs+Nginx安装配置文件服务器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在开发一个电商项目，需要用到图片上传功能。传统得做法是将图片存储在本地路径，但对于大型的网站来说，一般都会有单独存储图片的服务器，通过查阅相关资料，折腾了几天，我选择使用了Fastdfs+Nginx的方式来配置了一台文件存储服务器。</p>
+<h1 id="Fastdfs是什么"><a href="#Fastdfs是什么" class="headerlink" title="Fastdfs是什么"></a>Fastdfs是什么</h1><blockquote>
+<p>FastDFS是一个开源的轻量级分布式文件系统，它对文件进行管理，功能包括：文件存储、文件同步、文件访问（文件上传、文件下载）等，解决了大容量存储和负载均衡的问题。特别适合以文件为载体的在线服务，如相册网站、视频网站等等。</p>
+</blockquote>
+<p>所以说使用Fastdfs不仅仅可以用来作图片存储，各种以文件为载体的服务都可以由它来提供。</p>
+<blockquote>
+<p>fastfds有两个角色：<strong>跟踪服务</strong>和<strong>存储服务</strong>，跟踪服务控制，调度文件以负载均衡的方式访问；存储服务包括：文件存储，文件同步，提供文件访问接口，同时以key value的方式管理文件的元数据。<br>跟踪和存储服务可以由1台或者多台服务器组成，同时可以动态的添加，删除跟踪和存储服务而不会对在线的服务产生影响，在集群中，tracker服务是对等的。</p>
+</blockquote>
+<p>由于是第一次使用，对原理也并不是有很深刻的理解，所以，我更加养生记录一下安装和配置的过程，安装的过程还是会遇到各种各样的小问题的，是个比较繁琐考验耐心的过程。</p>
+<hr>
+<h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><h3 id="1-准备安装包"><a href="#1-准备安装包" class="headerlink" title="1. 准备安装包"></a>1. 准备安装包</h3><p><div align="left"><img src="/img/fastdfs/install_package.jpg" alt="install_package" align="center"><div><br>需要如图上的四个安装包，以上资源都可以在网上或者github上找到。由于fastdfs依赖libfastcommon，所以我们先安装libfastcommon，为了方便操作，首先切换到root用户。<br>我是使用centos6.2的系统。</div></div></p>
+<h3 id="2-开始安装"><a href="#2-开始安装" class="headerlink" title="2. 开始安装"></a>2. 开始安装</h3><p>由于是从github上直接下载的，格式为zip的压缩文件，所以使用unzip解压，如果是tar包可使用tar命令。</p>
+<h4 id="安装libfastcommon"><a href="#安装libfastcommon" class="headerlink" title="安装libfastcommon"></a>安装libfastcommon</h4><pre><code>cd  /usr/local
+unzip libfastcommon-master.zip
+cd libfastcommon-master
+./make.sh
+./make.sh   install
+</code></pre><p>注意安装过程中的输出信息，如果没有报错就表示libfastcommon安装成功了。 由于libfastcommon.so默认安装到了/usr/lib64/libfastcommon.so，而FastDFS主程序设置的lib目录是/usr/local/lib，所以需要设置软连接：</p>
+<pre><code>ln -s /usr/lib64/libfastcommon.so /usr/local/lib/libfastcommon.so
+ln -s /usr/lib64/libfastcommon.so /usr/lib/libfastcommon.so
+ln -s /usr/lib64/libfdfsclient.so /usr/local/lib/libfdfsclient.so
+ln -s /usr/lib64/libfdfsclient.so /usr/lib/libfdfsclient.so
+</code></pre><p>至此libfastcommon安装成功了，接下来安装FastDFS</p>
+<h4 id="安装fastdfs"><a href="#安装fastdfs" class="headerlink" title="安装fastdfs"></a>安装fastdfs</h4><p>同样，首先解压</p>
+<p><code>[root@Frank install]# unzip fastdfs-master.zip</code></p>
+<p>进入fastdfs-master目录：</p>
+<pre><code>cd fastdfs-master
+</code></pre><p>依次执行下面命令</p>
+<pre><code>./make.sh  
+./make.sh install
+</code></pre><p>如果没报错就表示安装成功了。</p>
+<p>配置</p>
+<p>修改配置文件：<br>配置tracker<br>打开tracker.conf</p>
+<pre><code>vim tracker.conf
+</code></pre><p>修改配置文件的这几项（根据数据情况修改）：</p>
+<pre><code>base_path=/home/zq/fastdfs
+bind_addr=192.168.248.130
+启动trackerd服务：
+[plain] view plaincopy
+fdfs_trackerd tracker.conf
+</code></pre><p>通过如下命令查看trackerd服务是否启动：</p>
+<pre><code>netstat -tupln | grep trackerd
+</code></pre><p>输出如下类似的信息表示已经启动了：<br>tcp0  0 192.168.248.130:22122   0.0.0.0:*   LISTEN  11309/fdfs_trackerd<br>也可以通过查看日志文件看下有没有出错（/home/zq/fastdfs是前面配置的路径），如果没有报错，应该trackerd服务启动了.</p>
+<p>配置client并测试上传<br>打开client.conf:<br>vim client.conf<br>修改配置文件的这几项（根据数据情况修改）：<br>base_path=/home/zq/fastdfs<br>tracker_server=192.168.248.130:22122<br>上传测试：<br>fdfs_upload_file client.conf client.conf.sample<br>将会上传client.conf.sample文件，如果看到类型下面的信息，那么恭喜你，配置成功了：<br>group1/M00/00/00/wKjHglYshRGAfbrTAAAFtTzeg5c.sample</p>
+<h4 id="安装和配置nginx插件"><a href="#安装和配置nginx插件" class="headerlink" title="安装和配置nginx插件"></a>安装和配置nginx插件</h4><p>配置fastdfs-nginx-module</p>
+<h5 id="1-解压fastdfs-nginx-module-v1-16-tar-gz"><a href="#1-解压fastdfs-nginx-module-v1-16-tar-gz" class="headerlink" title="1.  解压fastdfs-nginx-module_v1.16.tar.gz"></a>1.  解压fastdfs-nginx-module_v1.16.tar.gz</h5><p>tar -zxvf fastdfs-nginx-module_v1.16.tar.gz  </p>
+<h5 id="2-修改config文件"><a href="#2-修改config文件" class="headerlink" title="2. 修改config文件"></a>2. 修改config文件</h5><p>cd fastdfs-nginx-module/src/<br>vim config<br>修改配置，找到下面这行</p>
+<pre><code>CORE_INCS=&quot;$CORE_INCS /usr/local/include/fastdfs /usr/local/include/fastcommon/&quot;
+</code></pre><p>改成</p>
+<pre><code>CORE_INCS=&quot;$CORE_INCS /usr/include/fastdfs /usr/include/fastcommon/&quot;
+</code></pre><p>这个是很重要的，不然在nginx编译的时候会报错的，我看网上很多在安装nginx的fastdfs的插件报错，都是这个原因，而不是版本不匹配。</p>
+<h5 id="3-修改mod-fastdfs-conf，先复制一份到-etc-fdfs目录下"><a href="#3-修改mod-fastdfs-conf，先复制一份到-etc-fdfs目录下" class="headerlink" title="3.修改mod_fastdfs.conf，先复制一份到/etc/fdfs目录下"></a>3.修改mod_fastdfs.conf，先复制一份到/etc/fdfs目录下</h5><pre><code>cp mod_fastdfs.conf /etc/fdfs/
+cd /etc/fdfs/
+gedit mod_fastdfs.conf
+</code></pre><p>修改如下几项：</p>
+<pre><code>tracker_server=192.168.199.130:22122
+store_path0=/home/zq/fastdfs
+base_path=/home/zq/fastdfs
+url_have_group_name = true（配置多个tracker时，应该将此项设置为true）
+</code></pre><h5 id="4-建立文件服务器的软连接，并做一些需要的操作"><a href="#4-建立文件服务器的软连接，并做一些需要的操作" class="headerlink" title="4.建立文件服务器的软连接，并做一些需要的操作"></a>4.建立文件服务器的软连接，并做一些需要的操作</h5><p>建立软连接（配置文件中storage存放数据的路径):</p>
+<pre><code>ln -s /home/zq/fastdfs/data /home/zq/fastdfs/data/M00
+将fastdfs-5.05配置目录下的2个文件复制到/etc/fdfs目录下：
+cp /usr/local/fastdfs-5.05/conf/http.conf .
+cp /usr/local/fastdfs-5.05/conf/mime.types .
+</code></pre><h4 id="安装和配置nginx："><a href="#安装和配置nginx：" class="headerlink" title="安装和配置nginx："></a>安装和配置nginx：</h4><h5 id="1-安装之前的依赖"><a href="#1-安装之前的依赖" class="headerlink" title="1.安装之前的依赖"></a>1.安装之前的依赖</h5><p>PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</p>
+<pre><code>yum install -y pcre pcre-deve
+</code></pre><p>zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。</p>
+<pre><code>yum install -y zlib zlib-devel
+</code></pre><p>OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。</p>
+<pre><code>yum install -y openssl openssl-devel
+</code></pre><h5 id="2-安装nginx-1-8-1-tar-gz"><a href="#2-安装nginx-1-8-1-tar-gz" class="headerlink" title="2. 安装nginx-1.8.1.tar.gz"></a>2. 安装nginx-1.8.1.tar.gz</h5><pre><code>tar -zxvf nginx-1.8.1.tar.gz
+
+tar -zxvf nginx-1.8.1.tar.gz
+cd nginx-1.8.1
+configure
+./configure --help查询详细参数
+</code></pre><p>参数设置如下：</p>
+<pre><code>./configure \
+--prefix=/usr/local/nginx \
+--pid-path=/var/run/nginx/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--with-http_gzip_static_module \
+--http-client-body-temp-path=/var/temp/nginx/client \
+--http-proxy-temp-path=/var/temp/nginx/proxy \
+--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
+--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
+--http-scgi-temp-path=/var/temp/nginx/scgi
+</code></pre><p>注意：上边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录</p>
+<p>然后依次执行下面的命令：</p>
+<pre><code>make  
+make install
+</code></pre><h5 id="3-配置nginx"><a href="#3-配置nginx" class="headerlink" title="3.配置nginx"></a>3.配置nginx</h5><p>打开nginx.conf配置文件<br>cd /usr/local/nginx/conf<br>gedit nginx.conf<br>在server节点加入下面的配置</p>
+<pre><code>location /group1/M00{
+root /usrdata/fastdfs/data;
+ngx_fastdfs_module;
+}
+</code></pre><h5 id="4-启动nginx"><a href="#4-启动nginx" class="headerlink" title="4.启动nginx"></a>4.启动nginx</h5><p>/usr/local/nginx/sbin/nginx<br>用如下命令查看nginx是否启动了：</p>
+<pre><code>netstat -tupln | grep nginx
+</code></pre><p>输出如下（nginx默认监听的是80端口）：<br>tcp0  0 0.0.0.0:80  0.0.0.0:*   LISTEN  9342/nginx</p>
+<h5 id="5-测试配置的nginx"><a href="#5-测试配置的nginx" class="headerlink" title="5.测试配置的nginx"></a>5.测试配置的nginx</h5><p>打开浏览器输入:<a href="http://127.0.0.1" target="_blank" rel="noopener">http://127.0.0.1</a> 能看到下面的界面表示安装成功了！</p>
+<p><div align="left"><img src="/img/fastdfs/nginx_success.jpg" alt="install_package" align="center"><div></div></div></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/09/Fastdfs-Nginx安装配置文件服务器/" class="archive-article-date">
+  	<time datetime="2016-12-09T01:30:56.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-09</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/12/27/book-list/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          book_list
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/02/怎样让生活更有趣/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">怎样让生活更有趣</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Fastdfs-Nginx安装配置文件服务器" data-title="Fastdfs+Nginx安装配置文件服务器" data-url="https://wanghuu.github.io/2016/12/09/Fastdfs-Nginx安装配置文件服务器/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"wanghuu"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 Frank Wang
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/wanghuu/hexo-theme-yilia" target="_blank">wanghuu</a> by Frank Wang 
+      	</div>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/情感/" style="font-size: 10px;">情感</a> <a href="/tags/未来/" style="font-size: 10px;">未来</a> <a href="/tags/读书/" style="font-size: 20px;">读书</a> <a href="/tags/随笔/" style="font-size: 15px;">随笔</a>
+    			</div>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">人生得意须尽欢，&lt;br&gt;莫使金樽空对月。</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
